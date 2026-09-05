@@ -1,0 +1,27 @@
+name: 'Sync Upstream'
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 每天 UTC 时间 2:00 (北京时间上午 10:00) 运行
+  workflow_dispatch:     # 允许你手动触发
+
+jobs:
+  sync_latest_from_upstream:
+    runs-on: ubuntu-latest
+    name: Sync latest commits from upstream repo
+
+    steps:
+      # Step 1: 检出你的复刻仓库代码
+      - name: Checkout target repo
+        uses: actions/checkout@v3
+
+      # Step 2: 执行同步操作
+      - name: Sync Upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          # 重要！这里填写原始仓库的路径
+          upstream_sync_repo: wes-lin/Cloud189Checkin
+          upstream_sync_branch: main
+          target_sync_branch: main
+          test_mode: false
